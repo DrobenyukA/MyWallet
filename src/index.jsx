@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as FontAwesome from './services/fontAwesome';
+import 'whatwg-fetch';
 
 import appStore from './store'
 import './styles/index.scss';
