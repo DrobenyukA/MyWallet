@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logo from '../assets/logo.svg';
-import { getCategories } from '../actions/categories';
-
-const mapStateToProps = (state) => ({});
-const mapDispatchToProps = (dispatch) => ({dispatch});
 
 class App extends Component {
-    componentDidMount() {
-        this.props.dispatch(getCategories());
-    }
     render() {
         return (
             <div className="App">
@@ -27,4 +19,4 @@ class App extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
