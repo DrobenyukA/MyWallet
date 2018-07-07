@@ -44,7 +44,7 @@ class App extends Component {
                     To get started, edit <code> src / App.js </code> and save to reload. 
                 </p>
                 <div className="text-center">
-                    <button onClick={this.loginHandler}>Login with Google</button>
+                    <button onClick={this.loginHandler}>Login with <i className="fab fa-google"></i></button>
                 </div>
             </div>
         );
