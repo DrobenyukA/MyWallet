@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import firebase from 'firebase/app';
-import {auth} from 'firebase';
 
-import appConfig from '../config';
+import auth, {loginWithGoogle} from '../firebase/auth';
 import logo from '../assets/logo.svg';
 
 // 1. INITIALIZE APP
-firebase.initializeApp(appConfig);
+// firebase.initializeApp(appConfig[getConfigName()]);
 
 // INSTALL language behavior
 auth().languageCode = 'ua';
@@ -25,7 +24,7 @@ provider.setCustomParameters({
 class App extends Component {
 
     loginHandler = () => {
-        auth().signInWithPopup(provider).then(function(result) {
+        loginWithGoogle(auth, provider).then(function(result) {
             // This gives you a Google Access Token. You can use it to access the Google API.
             var token = result.credential.accessToken;
             // The signed-in user info.
