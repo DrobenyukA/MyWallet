@@ -17,7 +17,6 @@ class App extends Component {
         const {user} = this.props;
         const token = localStorage.getItem(TOKEN);
         if (token && !user) {
-            console.log('App -> componentDidMount -> getLoggedUser');
             this.props.dispatch(getLoggedUser(true));
         }
     }
