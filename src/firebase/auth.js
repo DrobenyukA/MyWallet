@@ -18,7 +18,8 @@ defaultProvider.setCustomParameters({
     'login_hint': 'some-address@example.com'
 });
 
-export function loginWithGoogle(auth = defaultAuth, provider = defaultProvider) {
+export function withGoogle(auth = defaultAuth, provider = defaultProvider) {
     return auth().signInWithPopup(provider)
 }
+
 export default firebase.auth;

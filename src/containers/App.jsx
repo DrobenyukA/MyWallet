@@ -1,54 +1,57 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import firebase from 'firebase/app';
 
-import auth, {loginWithGoogle} from '../firebase/auth';
 import logo from '../assets/logo.svg';
+import { loginWithGoogle, getLoggedUser } from '../actions/session';
+import { TOKEN } from '../constants/session';
 
-// 1. INITIALIZE APP
-// firebase.initializeApp(appConfig[getConfigName()]);
-
-// INSTALL language behavior
-auth().languageCode = 'ua';
+const mapStateToProps = ({session}) => ({
+    user: session.user
+});
+const mapDispatchToProps = (dispatch) => ({dispatch});
 
 class App extends Component {
 
-    loginHandler = () => {
-        loginWithGoogle(auth).then(function(result) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-            // The signed-in user info.
-            var user = result.user;
-            console.log('RESPONSE: ', result);
-          }).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
-            console.log('ERROR: ', error);
-          });
+    componentDidMount() {
+        const {user} = this.props;
+        const token = localStorage.getItem(TOKEN);
+        if (token && !user) {
+            this.props.dispatch(getLoggedUser());
+        }
     }
 
+    loginHandler = () => this.props.dispatch(loginWithGoogle('en'));
+
+    renderLoginBtn() {
+        const {user} = this.props;
+        if (user) {
+            return null;
+        }
+        return (
+            <div className="text-center">
+                <button onClick={this.loginHandler}>
+                    Login with <i className="fab fa-google"></i>
+                </button>
+            </div>
+        )
+    }
     render() {
+        const {user} = this.props;
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
-                    <h1 className="App-title" > Welcome to MyWallet <FontAwesomeIcon icon="wallet" /> </h1>
+                    <h1 className="App-title" > 
+                        Welcome { user ? user.displayName + ' in ' : 'to '  } MyWallet <FontAwesomeIcon icon="wallet" />
+                    </h1>
                 </header>
                 <p className="App-intro">
                     To get started, edit <code> src / App.js </code> and save to reload. 
                 </p>
-                <div className="text-center">
-                    <button onClick={this.loginHandler}>Login with <i className="fab fa-google"></i></button>
-                </div>
             </div>
         );
     }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
