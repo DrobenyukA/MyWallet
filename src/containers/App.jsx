@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logo from '../assets/logo.svg';
-import { loginWithGoogle, getLoggedUser } from '../actions/session';
+import { signInWithGoogle, getLoggedUser, signOut } from '../actions/session';
 import { TOKEN } from '../constants/session';
 
 const mapStateToProps = ({session}) => ({
@@ -17,16 +17,19 @@ class App extends Component {
         const {user} = this.props;
         const token = localStorage.getItem(TOKEN);
         if (token && !user) {
-            this.props.dispatch(getLoggedUser());
+            console.log('App -> componentDidMount -> getLoggedUser');
+            this.props.dispatch(getLoggedUser(true));
         }
     }
+    // TODO: add locale for authentication
+    loginHandler = () => this.props.dispatch(signInWithGoogle('en'));
 
-    loginHandler = () => this.props.dispatch(loginWithGoogle('en'));
+    looutHandler = () => this.props.dispatch(signOut());
 
     renderLoginBtn() {
         const {user} = this.props;
-        if (user) {
-            return null;
+        if (user && !user.isLoading) {
+            return <button onClick={this.looutHandler}>Logout</button>;
         }
         return (
             <div className="text-center">
@@ -43,12 +46,13 @@ class App extends Component {
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
                     <h1 className="App-title" > 
-                        Welcome { user ? user.displayName + ' in ' : 'to '  } MyWallet <FontAwesomeIcon icon="wallet" />
+                        Welcome { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet <FontAwesomeIcon icon="wallet" />
                     </h1>
                 </header>
                 <p className="App-intro">
                     To get started, edit <code> src / App.js </code> and save to reload. 
                 </p>
+                {this.renderLoginBtn()}
             </div>
         );
     }

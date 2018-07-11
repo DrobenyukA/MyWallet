@@ -5,7 +5,13 @@ import { defaultLanguage } from '../constants/languages';
 
 const appAuth = auth();
 
-export const getUser = () => ({type: SESSION.GET_USER});
+export const login = () => ({type: SESSION.LOGIN});
+export const logout = () => ({type: SESSION.LOGOUT})
+
+export const signOut = () => (dispatch) => {
+    dispatch(logout());
+    return appAuth.signOut();
+}
 
 export const storeUser = (user) => ({
     type: SESSION.STORE_USER, payload: user
@@ -16,9 +22,9 @@ export const authenticationFailed = (error) => ({
     payload: error
 });
 
-export const loginWithGoogle = (language = defaultLanguage) => (dispatch) => {
+export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
     appAuth.languageCode = language;
-    dispatch(getUser());
+    dispatch(login());
     return withGoogle(auth).then((result) => {
         localStorage.setItem(SESSION.TOKEN, result.credential.accessToken);
         dispatch(storeUser(result.user));
@@ -30,10 +36,12 @@ export const loginWithGoogle = (language = defaultLanguage) => (dispatch) => {
 }
 
 export const getLoggedUser = () => (dispatch) => {
-    dispatch(getUser());
+    dispatch(login());
     return appAuth.onAuthStateChanged(user => {
         if (user) {
             return dispatch(storeUser(user));
+        } else {
+            return dispatch(logout());
         }
     });
 };

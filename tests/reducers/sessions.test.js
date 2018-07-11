@@ -22,8 +22,8 @@ describe('Session reducer:', () => {
         });
     });
 
-    describe(ACTIONS.GET_USER + ' action:', () => {
-        const action = {type: ACTIONS.GET_USER};
+    describe(ACTIONS.LOGIN + ' action:', () => {
+        const action = {type: ACTIONS.LOGIN};
         const state = reducer(initialState, action);
         
         it('Should indicate loading state for user', () => {
@@ -46,6 +46,15 @@ describe('Session reducer:', () => {
 
     describe(ACTIONS.AUTH_FAILED + ' action:', () => {
         const action = {type: ACTIONS.AUTH_FAILED};
+        const state = reducer(previosuState, action);
+        
+        it('Should not have user', () => {
+            expect(state.user).toBeNull();
+        });
+    });
+
+    describe(ACTIONS.LOGOUT + ' action:', () => {
+        const action = {type: ACTIONS.LOGOUT};
         const state = reducer(previosuState, action);
         
         it('Should not have user', () => {

@@ -1,11 +1,13 @@
 import { Thunk } from 'redux-testkit';
 
 import {
-    getUser,
+    login,
     storeUser,
     authenticationFailed,
-    loginWithGoogle,
+    signInWithGoogle,
     getLoggedUser,
+    logout,
+    signOut
 } from '../../src/actions/session';
 import {
     ACTIONS as TYPES
@@ -21,10 +23,10 @@ const testError = {
     type: 'testError'
 };
 
-describe('getUser action creator', () => {
-    beforeAll(() => action = getUser());
+describe('login action creator', () => {
+    beforeAll(() => action = login());
     it('Should have correct type', () => {
-        expect(action.type).toBe(TYPES.GET_USER);
+        expect(action.type).toBe(TYPES.LOGIN);
     });
     it('Should not have payload', () => {
         expect(action.payload).toBeUndefined();
@@ -53,15 +55,15 @@ describe('authenticationFailed action creator', () => {
 
 describe('loginWithGoogle action creator', () => {
     beforeAll(() => {
-        dispatches = Thunk(loginWithGoogle).execute()
+        dispatches = Thunk(signInWithGoogle).execute()
     });
 
-    it('Should dispatch 2 actions', () => {
+    it('Should dispatch two actions', () => {
         expect(dispatches.length).toBe(2);
     });
 
-    it('Fist action should be ' + TYPES.GET_USER, () => {
-        expect(dispatches[0].getType()).toBe(TYPES.GET_USER);
+    it('Fist action should be ' + TYPES.LOGIN, () => {
+        expect(dispatches[0].getType()).toBe(TYPES.LOGIN);
     });
 
     it('Second action should be ' + TYPES.AUTH_FAILED, () => {
@@ -75,11 +77,40 @@ describe('getLoggedUser action creator', () => {
         dispatches = Thunk(getLoggedUser).execute()
     });
 
-    it('Should dispatch 1 actions', () => {
+    it('Should dispatch two actions', () => {
+        expect(dispatches.length).toBe(2);
+    });
+
+    it('Fist action should be ' + TYPES.LOGIN, () => {
+        expect(dispatches[0].getType()).toBe(TYPES.LOGIN);
+    });
+
+    it('Second action should be ' + TYPES.LOGOUT, () => {
+        expect(dispatches[1].getType()).toBe(TYPES.LOGOUT);
+    });
+
+});
+
+describe('logout action creator', () => {
+    beforeAll(() => action = logout());
+    it('Should have correct type', () => {
+        expect(action.type).toBe(TYPES.LOGOUT);
+    });
+    it('Should not have payload', () => {
+        expect(action.payload).toBeUndefined();
+    });
+});
+
+describe('signOut action creator', () => {
+    beforeAll(() => {
+        dispatches = Thunk(signOut).execute()
+    });
+
+    it('Should dispatch one action', () => {
         expect(dispatches.length).toBe(1);
     });
 
-    it('Fist action should be ' + TYPES.GET_USER, () => {
-        expect(dispatches[0].getType()).toBe(TYPES.GET_USER);
+    it('First action shoudl be ' + TYPES.LOGOUT, () => {
+        expect(dispatches[0].getType()).toBe(TYPES.LOGOUT);
     });
 });
