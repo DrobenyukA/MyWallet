@@ -1,6 +1,6 @@
 import auth, {withGoogle} from '../firebase/auth';
 
-import {ACTIONS as SESSION} from '../constants/session';
+import {ACTIONS as SESSION, TOKEN} from '../constants/session';
 import { defaultLanguage } from '../constants/languages';
 
 const appAuth = auth();
@@ -26,7 +26,7 @@ export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
     appAuth.languageCode = language;
     dispatch(login());
     return withGoogle(auth).then((result) => {
-        localStorage.setItem(SESSION.TOKEN, result.credential.accessToken);
+        localStorage.setItem(TOKEN, result.credential.accessToken);
         dispatch(storeUser(result.user));
         // TODO: store user profile
         // dispatch(storeProfile(result.credential.profile))
@@ -35,12 +35,12 @@ export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
       });
 }
 
-export const getLoggedUser = () => (dispatch) => {
+export const getLoggedUser = (appUser) => (dispatch) => {
     dispatch(login());
-    return appAuth.onAuthStateChanged(user => {
-        if (user) {
-            return dispatch(storeUser(user));
-        } else {
+    return appAuth.onAuthStateChanged(authUser => {
+        if (authUser && !appUser) {
+            return dispatch(storeUser(authUser));
+        } else if (appUser) {
             return dispatch(logout());
         }
     });

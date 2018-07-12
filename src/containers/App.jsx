@@ -16,10 +16,12 @@ class App extends Component {
     componentDidMount() {
         const {user} = this.props;
         const token = localStorage.getItem(TOKEN);
+        console.log(TOKEN, token)
         if (token && !user) {
-            this.props.dispatch(getLoggedUser(true));
+            this.props.dispatch(getLoggedUser(user));
         }
     }
+
     // TODO: add locale for authentication
     loginHandler = () => this.props.dispatch(signInWithGoogle('en'));
 
