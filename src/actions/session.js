@@ -25,7 +25,7 @@ export const authenticationFailed = (error) => ({
 export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
     appAuth.languageCode = language;
     dispatch(login());
-    return withGoogle(auth).then((result) => {
+    return withGoogle(appAuth).then((result) => {
         localStorage.setItem(TOKEN, result.credential.accessToken);
         dispatch(storeUser(result.user));
         // TODO: store user profile

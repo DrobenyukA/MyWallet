@@ -53,9 +53,9 @@ describe('authenticationFailed action creator', () => {
     });
 });
 
-describe('loginWithGoogle action creator', () => {
-    beforeAll(() => {
-        dispatches = Thunk(signInWithGoogle).execute()
+describe('signInWithGoogle action creator', () => {
+    beforeAll(async () => {
+        dispatches = await Thunk(signInWithGoogle).execute()
     });
 
     it('Should dispatch two actions', () => {
@@ -73,20 +73,16 @@ describe('loginWithGoogle action creator', () => {
 });
 
 describe('getLoggedUser action creator', () => {
-    beforeAll(() => {
-        dispatches = Thunk(getLoggedUser).execute()
+    beforeAll( async () => {
+        dispatches = await Thunk(getLoggedUser).execute()
     });
 
-    it('Should dispatch two actions', () => {
-        expect(dispatches.length).toBe(2);
+    it('Should dispatch one actions', () => {
+        expect(dispatches.length).toBe(1);
     });
 
     it('Fist action should be ' + TYPES.LOGIN, () => {
         expect(dispatches[0].getType()).toBe(TYPES.LOGIN);
-    });
-
-    it('Second action should be ' + TYPES.LOGOUT, () => {
-        expect(dispatches[1].getType()).toBe(TYPES.LOGOUT);
     });
 
 });

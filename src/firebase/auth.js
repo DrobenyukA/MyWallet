@@ -19,7 +19,7 @@ defaultProvider.setCustomParameters({
 });
 
 export function withGoogle(auth = defaultAuth, provider = defaultProvider) {
-    return auth().signInWithPopup(provider)
+    return auth.signInWithPopup(provider)
 }
 
 export default firebase.auth;
