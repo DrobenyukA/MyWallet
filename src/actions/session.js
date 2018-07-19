@@ -14,12 +14,13 @@ export const signOut = () => (dispatch) => {
 }
 
 export const storeUser = (user) => ({
-    type: SESSION.STORE_USER, payload: user
+    type: SESSION.STORE_USER, 
+    payload: user,
 });
 
 export const authenticationFailed = (error) => ({
     type: SESSION.AUTH_FAILED,
-    payload: error
+    payload: error,
 });
 
 export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
@@ -30,9 +31,9 @@ export const signInWithGoogle = (language = defaultLanguage) => (dispatch) => {
         dispatch(storeUser(result.user));
         // TODO: store user profile
         // dispatch(storeProfile(result.credential.profile))
-      }).catch((error) => {
-          dispatch(authenticationFailed(error));
-      });
+    }).catch((error) => {
+        dispatch(authenticationFailed(error));
+    });
 }
 
 export const getLoggedUser = (appUser) => (dispatch) => {

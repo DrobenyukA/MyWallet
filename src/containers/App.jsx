@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { setActiveLanguage } from 'react-localize-redux';
 
+import {getTranslations} from '../services/localization';
 import logo from '../assets/logo.svg';
 import { signInWithGoogle, getLoggedUser, signOut } from '../actions/session';
 import { TOKEN } from '../constants/session';
 
-const mapStateToProps = ({session}) => ({
+const mapStateToProps = ({session, localize}) => ({
+    languages: localize.languages,
+    translate: getTranslations(localize),
     user: session.user,
 });
 const mapDispatchToProps = (dispatch) => ({dispatch});
@@ -27,6 +31,8 @@ class App extends Component {
 
     looutHandler = () => this.props.dispatch(signOut());
 
+    languageChangeHandler = (event) => this.props.dispatch(setActiveLanguage(event.target.value));
+
     renderLoginBtn() {
         const {user} = this.props;
         if (user && !user.isLoading) {
@@ -40,19 +46,31 @@ class App extends Component {
             </div>
         )
     }
+
     render() {
-        const {user} = this.props;
+        const {user, translate, languages} = this.props;
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
                     <h1 className="App-title" > 
-                        Welcome { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet
+                        { translate('common.welcome')} &nbsp;
+                        { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet
                         <FontAwesomeIcon icon="wallet" />
                     </h1>
                 </header>
                 <p className="App-intro">
                     To get started, edit <code> src / App.js </code> and save to reload.
+                </p>
+                <p>
+                    Shoose langueage: &nbsp;
+                    <select name="language" onChange={this.languageChangeHandler}>
+                        {languages.map( language => (
+                            <option key={language.code} value={language.code}>
+                                {language.code}
+                            </option>
+                        ))}
+                    </select>
                 </p>
                 {this.renderLoginBtn()}
             </div>
@@ -62,6 +80,8 @@ class App extends Component {
 
 App.propTypes = {
     user: PropTypes.object,
+    languages: PropTypes.arrayOf(PropTypes.object),
+    translate: PropTypes.func,
     dispatch: PropTypes.func.isRequired,
 }
 

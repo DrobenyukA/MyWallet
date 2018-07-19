@@ -16,7 +16,8 @@ const appContainer = document.getElementById('root');
 ReactDOM.render(
     <Provider store={appStore}>
         <App />
-    </Provider>
-, appContainer);
+    </Provider>,
+    appContainer
+);
 
 registerServiceWorker();
