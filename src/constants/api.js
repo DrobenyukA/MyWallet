@@ -1,8 +1,10 @@
 import CONFIG from  '../../src/config';
+import {getConfigName} from '../services/environment';
 
-export const CATEGORIES = `${CONFIG.databaseURL}/categories.json`;
+export const BASE = CONFIG[getConfigName()].databaseURL;
+export const CATEGORIES = `${BASE}/categories.json`;
 
 export default {
-    DOMAIN: CONFIG.BASE,
+    BASE,
     CATEGORIES,
 };
