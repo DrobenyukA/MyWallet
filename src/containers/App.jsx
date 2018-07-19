@@ -1,65 +1,62 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import firebase from 'firebase/app';
-import {auth} from 'firebase';
 
-import appConfig from '../config';
 import logo from '../assets/logo.svg';
+import { signInWithGoogle, getLoggedUser, signOut } from '../actions/session';
+import { TOKEN } from '../constants/session';
 
-// 1. INITIALIZE APP
-firebase.initializeApp(appConfig);
-
-// INSTALL language behavior
-auth().languageCode = 'ua';
-
-// To apply the default browser preference instead of explicitly setting it.
-// firebase.auth().useDeviceLanguage();
- 
-const provider = new firebase.auth.GoogleAuthProvider();
-
-// Additional adjustments https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#setCustomParameters
-provider.setCustomParameters({
-    'login_hint': 'some-address@example.com'
+const mapStateToProps = ({session}) => ({
+    user: session.user
 });
+const mapDispatchToProps = (dispatch) => ({dispatch});
 
 class App extends Component {
 
-    loginHandler = () => {
-        auth().signInWithPopup(provider).then(function(result) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-            // The signed-in user info.
-            var user = result.user;
-            console.log('RESPONSE: ', result);
-          }).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // ...
-            console.log('ERROR: ', error);
-          });
+    componentDidMount() {
+        const {user} = this.props;
+        const token = localStorage.getItem(TOKEN);
+        console.log(TOKEN, token)
+        if (token && !user) {
+            this.props.dispatch(getLoggedUser(user));
+        }
     }
 
+    // TODO: add locale for authentication
+    loginHandler = () => this.props.dispatch(signInWithGoogle('en'));
+
+    looutHandler = () => this.props.dispatch(signOut());
+
+    renderLoginBtn() {
+        const {user} = this.props;
+        if (user && !user.isLoading) {
+            return <button onClick={this.looutHandler}>Logout</button>;
+        }
+        return (
+            <div className="text-center">
+                <button onClick={this.loginHandler}>
+                    Login with <i className="fab fa-google"></i>
+                </button>
+            </div>
+        )
+    }
     render() {
+        const {user} = this.props;
         return (
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
-                    <h1 className="App-title" > Welcome to MyWallet <FontAwesomeIcon icon="wallet" /> </h1>
+                    <h1 className="App-title" > 
+                        Welcome { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet <FontAwesomeIcon icon="wallet" />
+                    </h1>
                 </header>
                 <p className="App-intro">
                     To get started, edit <code> src / App.js </code> and save to reload. 
                 </p>
-                <div className="text-center">
-                    <button onClick={this.loginHandler}>Login with Google</button>
-                </div>
+                {this.renderLoginBtn()}
             </div>
         );
     }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
