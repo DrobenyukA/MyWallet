@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logo from '../assets/logo.svg';
@@ -7,7 +8,7 @@ import { signInWithGoogle, getLoggedUser, signOut } from '../actions/session';
 import { TOKEN } from '../constants/session';
 
 const mapStateToProps = ({session}) => ({
-    user: session.user
+    user: session.user,
 });
 const mapDispatchToProps = (dispatch) => ({dispatch});
 
@@ -16,7 +17,6 @@ class App extends Component {
     componentDidMount() {
         const {user} = this.props;
         const token = localStorage.getItem(TOKEN);
-        console.log(TOKEN, token)
         if (token && !user) {
             this.props.dispatch(getLoggedUser(user));
         }
@@ -47,16 +47,22 @@ class App extends Component {
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
                     <h1 className="App-title" > 
-                        Welcome { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet <FontAwesomeIcon icon="wallet" />
+                        Welcome { user && !user.isLoading ? user.displayName + ' in ' : 'to '  } MyWallet
+                        <FontAwesomeIcon icon="wallet" />
                     </h1>
                 </header>
                 <p className="App-intro">
-                    To get started, edit <code> src / App.js </code> and save to reload. 
+                    To get started, edit <code> src / App.js </code> and save to reload.
                 </p>
                 {this.renderLoginBtn()}
             </div>
         );
     }
+}
+
+App.propTypes = {
+    user: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
