@@ -9,7 +9,12 @@
         "react"
     ],
     "rules": {
-        "comma-dangle": ["error", {"objects": "always-multiline"}],
+        "comma-dangle": ["error", {
+            "objects": "always-multiline",
+            "arrays": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline"
+            }],
         "eol-last": ["error", "always"],
         "indent": ["error", 4],
         "max-len": [1, 120, 2, {"ignoreComments": true}],

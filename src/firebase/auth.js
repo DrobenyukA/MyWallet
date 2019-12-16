@@ -15,7 +15,7 @@ defaultAuth.useDeviceLanguage();
 const defaultProvider = new firebase.auth.GoogleAuthProvider();
 // Additional adjustments https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#setCustomParameters
 defaultProvider.setCustomParameters({
-    'login_hint': 'some-address@example.com'
+    'login_hint': 'some-address@example.com',
 });
 
 export function withGoogle(auth = defaultAuth, provider = defaultProvider) {

@@ -5,5 +5,5 @@ export function getCategories() {
 };
 
 export default {
-    get: getCategories
+    get: getCategories,
 };
